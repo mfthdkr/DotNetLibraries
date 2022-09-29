@@ -1,3 +1,3 @@
-.Net projeleri için gerekli kütüphaneler için çalışmalar. 
+.Net projeleri gerekli kütüphaneler için çalışmalar. 
 - FluentValidation (master branch)
 - AutoMapper
