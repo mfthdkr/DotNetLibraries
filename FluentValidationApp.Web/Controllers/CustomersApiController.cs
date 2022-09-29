@@ -1,10 +1,14 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 using FluentValidationApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using FluentValidationApp.Web.DTOs;
+using Microsoft.AspNetCore.Routing;
 
 namespace FluentValidationApp.Web.Controllers
 {
@@ -14,17 +18,33 @@ namespace FluentValidationApp.Web.Controllers
     {
         private readonly AppDbContext _context;
         private readonly  IValidator<Customer> _customerValidator;
-        public CustomersApiController(AppDbContext context,IValidator<Customer> customerValidator)
+        private readonly  IMapper _mapper;
+        public CustomersApiController(AppDbContext context,IValidator<Customer> customerValidator, IMapper mapper)
         {
             _context = context;
             _customerValidator = customerValidator;
+            _mapper = mapper;
+        }
+
+
+        [Route("MappingOrnek")]
+        [HttpGet]
+        public IActionResult MappingOrnek()
+        {
+            Customer customer = new Customer {Id = 1, Name = "fatih", Age = 23, Email = "fatih.diker@gmail.com",CreditCard = new CreditCard{Number = "1234",ValidDate = DateTime.Now}} ;
+
+
+
+            return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
         // GET: api/CustomersApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
-        {
-            return await _context.Customers.ToListAsync();
+        public async Task<ActionResult<IList<CustomerDto>>> GetCustomers()
+        {   
+            List<Customer> customers = await _context.Customers.ToListAsync();
+
+            return _mapper.Map<List<CustomerDto>>(customers);
         }
 
         // GET: api/CustomersApi/5
@@ -79,7 +99,7 @@ namespace FluentValidationApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            var result = _customerValidator.Validate(customer);
+            var result = await _customerValidator.ValidateAsync(customer);
             if (!result.IsValid)
             {
                 return BadRequest(result.Errors.Select(x => new {property = x.PropertyName, error = x.ErrorMessage}));

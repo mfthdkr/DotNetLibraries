@@ -20,5 +20,13 @@ namespace FluentValidationApp.Web.Models
         public IList<Address> Addresses { get; set; }
 
         public Gender Gender { get; set; }
+        public CreditCard CreditCard { get; set; }
+
+        // "Get" + "Eşleme Yapılacak Method İsmi" : GetFullName
+        public string GetFullName()
+        {
+            return $"{Name}-{Email}-{Age}";
+        }
+
     }
 }
