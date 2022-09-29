@@ -1,0 +1,4 @@
+1) fluent validation, asp.net core'dan gelen ModelState ile koordine olarak çalýþabilir. Ýstersek bunu kaldýrýp custom validate metodu yazabiliriz. CustomersController'da DI olarak geçip kullandýk.(IValidator)
+2) _ValidationScriptsPartial, client tarafýnda doðrulama saðlar.
+
+3) 
